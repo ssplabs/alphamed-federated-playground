@@ -1,0 +1,72 @@
+version: "3.9"
+
+services:
+  federated_db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: alpha&federated
+      MYSQL_USER: federated
+      MYSQL_PASSWORD: alpha&federated
+      MYSQL_DATABASE: federated_db
+      TZ: Asia/Shanghai
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--max_allowed_packet=200M']
+
+  playground-backend:
+    depends_on:
+      - federated_db
+    build:
+      context: ./
+      network: host
+    ports:
+      - "9898:9898"
+    restart: always
+
+  federated-service:
+    depends_on:
+      - federated_db
+      - playground-backend
+    build:
+      context: ../federated-service/
+      network: host
+    ports:
+      - "8080:8080"
+      - "21010-21020:21010-21020"
+    restart: always
+    volumes:
+      - model_data:/data/alphamed-federated-dataset
+
+  playground-jupyter:
+    depends_on:
+      - federated-service
+    container_name: alphamed-federated-playground-jupyter
+    hostname: playground-jupyter
+    image: "ssplabs/playground-jupyter:0.1.0"
+    ports:
+      - "8010:8000"
+    restart: always
+    volumes:
+      - model_data:/data/alphamed-federated-dataset:ro
+
+  playground-frontend:
+    depends_on:
+      - federated-service
+    container_name: alphamed-federated-playground-frontend
+    hostname: playground-frontend
+    image: "ssplabs/playground-frontend:0.1.0"
+    ports:
+      - "8000:80"
+    restart: always
+
+volumes:
+  db_data: {}
+  model_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /data/alphamed/alphamed-datase

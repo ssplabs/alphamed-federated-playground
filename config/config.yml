@@ -1,0 +1,20 @@
+
+backend:
+  host: 127.0.0.1
+db:
+  host: 127.0.0.1
+  port: 3306
+  database: federated_db
+  user:   federated
+  passwd: alpha&federated
+chain:
+  org_id: "wx-org1.chainmaker.org"
+  org_name: "sspchain1org1"
+  node_name: "sspchain1org1node1"
+  user_name: "sspchain1org1node1admin1"
+  cert:
+    org_ca: ../config/cert/org.crt
+    user_tls_cert: ../config/cert/user.tls.crt
+    user_tls_key: ../config/cert/user.tls.key
+    user_sign_cert: ../config/cert/user.sign.crt
+    user_sign_key: ../config/cert/user.sign.key
