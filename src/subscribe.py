@@ -20,10 +20,12 @@ class Subscribe(object):
             }
         res = self.backend.subscribe_chain(params)
         assert res.get('Status') == "OK", f"subscribe_chain params={params} failed res={res}"
+        print("successfully subscribe chain ")
     
     def subscribe_contract(self, params:dict):
         res = self.backend.subscribe_contract(params)
         assert res.get('Status') == "OK", f"subscribe_contract params={params} failed res={res}"
+        print(f"successfully subscribe chain {params}")
 
     def dispatch(self):
         try:
@@ -36,3 +38,14 @@ class Subscribe(object):
             return False
         else:
             return True
+
+    def dispatch_contract(self):
+        try:
+            for contract in self.chain_config.get('contract'):
+                self.subscribe_contract({"ChainId": self.chain_config.get('chain_id'),"ContractName": contract.get('name'),"ContractVersion": contract.get('version')})
+                self.subscribe_contract({"ChainId": self.chain_config.get('chain_id'),"ContractName": contract.get('name'),"ContractVersion": contract.get('version')})
+        except AssertionError as e:
+            print(e)
+            return False
+        else:
+            return True        

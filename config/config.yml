@@ -1,12 +1,6 @@
 
 backend:
   host: 127.0.0.1
-db:
-  host: 127.0.0.1
-  port: 3306
-  database: federated_db
-  user:   federated
-  passwd: alpha&federated
 chain:
   chain_id: "sspchain1"
   org_id: "wx-org1.chainmaker.org"
