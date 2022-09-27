@@ -1,6 +1,6 @@
 
 import os
-from backend_client import BackendClient
+from client import BackendClient
 
 class CertificateInitiator(object):
     def __init__(self, config):
@@ -32,6 +32,12 @@ class CertificateInitiator(object):
         assert res_json.get("Status") == "OK", "import_init_certs failed"
 
     def dispatch(self):
-        self.upload_file()
-        self.import_init_certs()
+        try:
+            self.upload_file()
+            self.import_init_certs()
+        except AssertionError as e:
+            print(str(e))
+            return False
+        else: 
+            return True
 

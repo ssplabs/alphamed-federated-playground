@@ -8,10 +8,21 @@ db:
   user:   federated
   passwd: alpha&federated
 chain:
+  chain_id: "sspchain1"
   org_id: "wx-org1.chainmaker.org"
   org_name: "sspchain1org1"
   node_name: "sspchain1org1node1"
+  node_id: "QmRj3kV7uQeCndrJvYYFHwfDoQmFdxNkCqpiL7m7VanKfw"
   user_name: "sspchain1org1node1admin1"
+  node_host: "81.70.132.120" # "127.0.0.1"
+  node_rpc_port: 12301
+  tls: true
+  tls_host_name: "chainmaker.org"
+  contract:
+  - name: "fact"
+    version: "1.0"
+  - name: "task"
+    version: "2.0"
   cert:
     org_ca: ../config/cert/org.crt
     user_tls_cert: ../config/cert/user.tls.crt

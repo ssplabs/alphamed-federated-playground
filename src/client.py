@@ -248,6 +248,63 @@ class BackendClient(object):
             _logger.exception(e)
             return {}
 
+    def subscribe_chain(self, params:dict, host=None):
+        """
+            params: {
+            "ChainId": "sspchain1",
+            "OrgId": "wx-org4.chainmaker.org",
+            "NodeId": "QmRj3kV7uQeCndrJvYYFHwfDoQmFdxNkCqpiL7m7VanKfw",
+            "UserName": "sspchain1org4node1admin1",
+            "NodeRpcAddress": "159.75.210.122:12301",
+            "Tls": 0,
+            "TLSHostName": "chainmaker.org"
+            }
+
+        """
+        if not host:
+            host = self.bass_host
+            self.login()
+        else:
+            self.login(host=host)
+
+        try:
+            url = f"http://{host}:{self.bass_port}{self.base_path}SubscribeChain"
+            resp_json, error = self.send_request(url, params)
+            _Response: dict = resp_json.get('Response')
+            _Data: dict = _Response.get('Data')
+            assert _Data, f'get_cert host={host} params={params} 返回 Data 错误: {_Data}'
+            return _Data
+        except AssertionError as e:
+            _logger.exception(e)
+            return {}
+
+    def subscribe_contract(self, params:dict, host=None):
+        """
+            params: {
+                "ChainId": "sspchain1",
+                "ContractName": "task",
+                "ContractVersion": "2.0"
+            }
+        """
+        if not host:
+            host = self.bass_host
+            self.login()
+        else:
+            self.login(host=host)
+
+        try:
+            url = f"http://{host}:{self.bass_port}{self.base_path}SubscribeChainContract"
+            resp_json, error = self.send_request(url, params)
+            _Response: dict = resp_json.get('Response')
+            _Data: dict = _Response.get('Data')
+            assert _Data, f'get_cert host={host} params={params} 返回 Data 错误: {_Data}'
+            return _Data
+        except AssertionError as e:
+            _logger.exception(e)
+            return {}
+        
+
+
     @staticmethod
     def get_filename_from_header(resp_header):
         content_disposition = resp_header.get("Content-Disposition")
