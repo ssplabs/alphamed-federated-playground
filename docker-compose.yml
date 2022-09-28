@@ -19,8 +19,9 @@ services:
   playground-backend:
     depends_on:
       - federated_db
+    container_name: alphamed-playground-backend
     build:
-      context: ./
+      context: git@github.com:ssplabs/playground-backend.git#release/v0.1.0:./playground-backend
       network: host
     ports:
       - "9898:9898"
@@ -30,8 +31,9 @@ services:
     depends_on:
       - federated_db
       - playground-backend
+    container_name: alphamed-federated-service    
     build:
-      context: ../federated-service/
+      context: git@github.com:ssplabs/federated-service.git#release/v0.1.0:./federated-service
       network: host
     ports:
       - "8080:8080"
@@ -45,7 +47,9 @@ services:
       - federated-service
     container_name: alphamed-federated-playground-jupyter
     hostname: playground-jupyter
-    image: "ssplabs/playground-jupyter:0.1.0"
+    build:
+      context: git@github.com:ssplabs/playground-jupyter.git#release/v0.1.0:./playground-jupyter
+      network: host
     ports:
       - "8010:8000"
     restart: always
@@ -56,6 +60,9 @@ services:
     depends_on:
       - federated-service
     container_name: alphamed-federated-playground-frontend
+    build:
+      context: git@github.com:ssplabs/alpha-med-pc.git#master:./playground-frontend
+      network: host
     hostname: playground-frontend
     image: "ssplabs/playground-frontend:0.1.0"
     ports:

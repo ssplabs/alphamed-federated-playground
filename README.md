@@ -110,7 +110,11 @@ chain:
 ```
 ### 启动平台
 #### 构建并启动系统
+
 ```
+// 创建文件目录
+mkdir /data/alphamed/alphamed-dataset/
+
 docker-compose up -d --build
 ```
 #### 初始化链节点订阅
