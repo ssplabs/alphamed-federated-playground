@@ -3,11 +3,12 @@ version: "3.9"
 services:
   federated_db:
     image: mysql:5.7
+    container_name: alphamed-federated-database
     volumes:
       - db_data:/var/lib/mysql
     restart: always
     ports:
-      - "3306:3306"
+      - "9306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: alpha&federated
       MYSQL_USER: federated
@@ -26,7 +27,7 @@ services:
       dockerfile: Dockerfile
       network: host
     ports:
-      - "9898:9898"
+      - "9060:9060"
     restart: always
 
   federated-service:
@@ -40,7 +41,7 @@ services:
       dockerfile: Dockerfile
       network: host
     ports:
-      - "8080:8080"
+      - "9080:9080"
       - "21010-21020:21010-21020"
     restart: always
     volumes:
@@ -57,7 +58,7 @@ services:
       dockerfile: Dockerfile
       network: host
     ports:
-      - "8010:8000"
+      - "9010:9010"
     restart: always
     volumes:
       - model_data:/data/alphamed-federated-dataset:ro
@@ -73,7 +74,7 @@ services:
       network: host
     hostname: playground-frontend
     ports:
-      - "8000:80"
+      - "9000:9000"
     restart: always
 
 volumes:
