@@ -72,7 +72,6 @@ services:
       dockerfile: Dockerfile
       network: host
     hostname: playground-frontend
-    image: "ssplabs/playground-frontend:0.1.0"
     ports:
       - "8000:80"
     restart: always
