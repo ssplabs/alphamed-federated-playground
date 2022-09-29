@@ -21,7 +21,6 @@ services:
     depends_on:
       - federated_db
     container_name: alphamed-playground-backend
-    image: alphamed-playground-backend:v0.1.0
     build:
       context: git@github.com:ssplabs/playground-backend.git#release/v0.1.0
       dockerfile: Dockerfile
@@ -35,7 +34,6 @@ services:
       - federated_db
       - playground-backend
     container_name: alphamed-federated-service    
-    image: alphamed-federated-service:v0.1.0
     build:
       context: git@github.com:ssplabs/federated-service.git#release/v0.1.0
       dockerfile: Dockerfile
@@ -51,7 +49,7 @@ services:
     depends_on:
       - federated-service
     container_name: alphamed-federated-playground-jupyter
-    image: alphamed-federated-playground-jupyter:v0.1.0
+
     hostname: playground-jupyter
     build:
       context: git@github.com:ssplabs/playground-jupyter.git#release/v0.1.0
@@ -67,7 +65,6 @@ services:
     depends_on:
       - federated-service
     container_name: alphamed-federated-playground-frontend
-    image: alphamed-federated-playground-frontend:v0.1.0
     build:
       context: git@github.com:ssplabs/alpha-med-pc.git#master
       dockerfile: Dockerfile

@@ -12,7 +12,7 @@ class BackendClient(object):
             'content-type': 'application/json'
         }
         self.bass_host = "localhost"
-        self.bass_port = 9898
+        self.bass_port = 9060
         self.base_path = "/alpha-med/fed-bass?cmb="
         self.session = requests.Session()
 

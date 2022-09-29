@@ -12,7 +12,7 @@ class CertificateInitiator(object):
         cert_dict = self.config.get('chain').get('cert')
         assert cert_dict, "do not find any cert config from config.yml"
         for key, cert_path in cert_dict.items():
-            assert os.path.isfile(cert_path) and os.path.exists(cert_path), f"{cert_path=} does not exist"
+            assert os.path.isfile(cert_path) and os.path.exists(cert_path), f"{cert_path} does not exist"
             file_key = self.bakend_client.upload_file(cert_path, host=self.config.get('backend', {}).get('host'))
             self.cert_content_dict[key] = file_key
     def import_init_certs(self):
