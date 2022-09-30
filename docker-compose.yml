@@ -56,7 +56,7 @@ services:
       dockerfile: Dockerfile
       network: host
     ports:
-      - "9010:9010"
+      - "9010:8000"
     restart: always
     volumes:
       - model_data:/data/alphamed-federated-dataset:ro
