@@ -81,4 +81,4 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: /data/alphamed/alphamed-datase
+      device: /data/alphamed/alphamed-dataset
