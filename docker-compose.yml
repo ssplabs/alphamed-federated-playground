@@ -60,6 +60,7 @@ services:
     restart: always
     volumes:
       - model_data:/data/alphamed-federated-dataset:ro
+      - code_data:/app/db
 
   playground-frontend:
     depends_on:
@@ -82,3 +83,9 @@ volumes:
       o: bind
       type: none
       device: /data/alphamed/alphamed-dataset
+  code_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /data/alphamed/alphamed-code
