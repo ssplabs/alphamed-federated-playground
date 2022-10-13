@@ -1,0 +1,91 @@
+version: "3.9"
+
+services:
+  federated_db:
+    image: mysql:5.7
+    container_name: alphamed-federated-database
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    ports:
+      - "9306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: alpha&federated
+      MYSQL_USER: federated
+      MYSQL_PASSWORD: alpha&federated
+      MYSQL_DATABASE: federated_db
+      TZ: Asia/Shanghai
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--max_allowed_packet=200M']
+
+  playground-backend:
+    depends_on:
+      - federated_db
+    container_name: alphamed-playground-backend
+    build:
+      context: git@github.com:ssplabs/playground-backend.git#release/v0.2.0
+      dockerfile: Dockerfile
+      network: host
+    ports:
+      - "9060:9060"
+    restart: always
+
+  federated-service:
+    depends_on:
+      - federated_db
+      - playground-backend
+    container_name: alphamed-federated-service    
+    build:
+      context: git@github.com:ssplabs/federated-service.git#release/v0.2.0_cuda11
+      dockerfile: Dockerfile
+      network: host
+    ports:
+      - "9080:9080"
+      - "21010-21020:21010-21020"
+    restart: always
+    volumes:
+      - model_data:/data/alphamed-federated-dataset
+
+  playground-jupyter:
+    depends_on:
+      - federated-service
+    container_name: alphamed-federated-playground-jupyter
+
+    hostname: playground-jupyter
+    build:
+      context: git@github.com:ssplabs/playground-jupyter.git#release/v0.2.0_cuda11
+      dockerfile: Dockerfile
+      network: host
+    ports:
+      - "9010:8000"
+    restart: always
+    volumes:
+      - model_data:/data/alphamed-federated-dataset:ro
+      - code_data:/app/db
+
+  playground-frontend:
+    depends_on:
+      - federated-service
+    container_name: alphamed-federated-playground-frontend
+    build:
+      context: git@github.com:ssplabs/alpha-med-pc.git#master
+      dockerfile: Dockerfile
+      network: host
+    hostname: playground-frontend
+    ports:
+      - "9000:9000"
+    restart: always
+
+volumes:
+  db_data: {}
+  model_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /data/alphamed/alphamed-dataset
+  code_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /data/alphamed/alphamed-code
