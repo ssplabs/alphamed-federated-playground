@@ -44,6 +44,14 @@ services:
     restart: always
     volumes:
       - model_data:/data/alphamed-federated-dataset
+    environment:
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+      NVIDIA_VISIBLE_DEVICES: all
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]      
 
   playground-jupyter:
     depends_on:
@@ -61,6 +69,14 @@ services:
     volumes:
       - model_data:/data/alphamed-federated-dataset:ro
       - code_data:/app/db
+    environment:
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+      NVIDIA_VISIBLE_DEVICES: all
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]      
 
   playground-frontend:
     depends_on:
