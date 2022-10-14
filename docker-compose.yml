@@ -52,7 +52,7 @@ services:
 
     hostname: playground-jupyter
     build:
-      context: git@github.com:ssplabs/playground-jupyter.git#release/v0.1.0
+      context: git@github.com:ssplabs/playground-jupyter.git#release/v0.2.0
       dockerfile: Dockerfile
       network: host
     ports:
