@@ -28,7 +28,7 @@ services:
       dockerfile: Dockerfile
       network: host
     ports:
-      - "9060:9060"
+      - "9070:9070"
     restart: always
 
   playground-backend:
@@ -109,4 +109,4 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: /data/alphamed/alphamed-database/init_db.sql
+      device: /data/alphamed/alphamed-database/init
