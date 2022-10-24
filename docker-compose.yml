@@ -6,6 +6,7 @@ services:
     container_name: alphamed-federated-database
     volumes:
       - db_data:/var/lib/mysql
+      - databse_init:/docker-entrypoint-initdb.d
     restart: always
     ports:
       - "9306:3306"
@@ -13,16 +14,30 @@ services:
       MYSQL_ROOT_PASSWORD: alpha&federated
       MYSQL_USER: federated
       MYSQL_PASSWORD: alpha&federated
-      MYSQL_DATABASE: federated_db
+      # MYSQL_DATABASE: federated_db
       TZ: Asia/Shanghai
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--max_allowed_packet=200M']
+
+
+  chain-connector:
+    depends_on:
+      - federated_db
+    container_name: alphamed-chain-connector
+    build:
+      context: git@github.com:ssplabs/ssplabs-chain-connector.git#master
+      dockerfile: Dockerfile
+      network: host
+    ports:
+      - "9060:9060"
+    restart: always
 
   playground-backend:
     depends_on:
       - federated_db
+      - chain-connector
     container_name: alphamed-playground-backend
     build:
-      context: git@github.com:ssplabs/playground-backend.git#master
+      context: git@github.com:ssplabs/playground-backend.git#develop
       dockerfile: Dockerfile
       network: host
     ports:
@@ -32,10 +47,10 @@ services:
   federated-service:
     depends_on:
       - federated_db
-      - playground-backend
+      - chain-connector
     container_name: alphamed-federated-service    
     build:
-      context: git@github.com:ssplabs/federated-service.git#master
+      context: git@github.com:ssplabs/federated-service.git#develop
       dockerfile: Dockerfile
       network: host
     ports:
@@ -47,7 +62,7 @@ services:
 
   playground-jupyter:
     depends_on:
-      - federated-service
+      - playground-backend
     container_name: alphamed-federated-playground-jupyter
 
     hostname: playground-jupyter
@@ -89,3 +104,9 @@ volumes:
       o: bind
       type: none
       device: /data/alphamed/alphamed-code
+  databse_init:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /data/alphamed/alphamed-database/init_db.sql
