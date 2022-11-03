@@ -12,8 +12,8 @@ class BackendClient(object):
             'content-type': 'application/json'
         }
         self.bass_host = "localhost"
-        self.bass_port = 9060
-        self.base_path = "/alpha-med/fed-bass?cmb="
+        self.bass_port = 9070
+        self.base_path = "/chain/connector?cmb="
         self.session = requests.Session()
 
     def login(self, host=None) -> bool:
@@ -64,6 +64,68 @@ class BackendClient(object):
             return {}, ""
         except Exception as e:
             raise e
+
+    def import_org_cert(self, params, host=None):
+        """
+        params:
+            OrgId     string
+            OrgName   string
+            CaCert    string
+            CaKey     string
+            Algorithm int
+        """
+
+        if not host:
+            host = self.bass_host
+            self.login()
+        else:
+            self.login(host=host)
+
+        try:
+            url = f"http://{host}:{self.bass_port}{self.base_path}InitOrgCaCert"
+            resp_json, error = self.send_request(url, params)
+            print(resp_json)
+            _Response: dict = resp_json.get('Response')
+            _Data: dict = _Response.get('Data')
+            assert _Data, f'get_cert host={host} params={params} 返回 Data 错误: {_Data}'
+            return _Data
+        except AssertionError as e:
+            _logger.exception(e)
+            return {}  
+
+
+    def import_user_cert(self, params, host=None):
+        """
+        params:
+            OrgId     string
+            OrgName   string
+            NodeName  string
+            UserName  string
+            SignCert  string
+            SignKey   string
+            TlsCert   string
+            TlsKey    string
+            Algorithm int
+        """
+
+        if not host:
+            host = self.bass_host
+            self.login()
+        else:
+            self.login(host=host)
+
+        try:
+            url = f"http://{host}:{self.bass_port}{self.base_path}InitUserCert"
+            resp_json, error = self.send_request(url, params)
+            print(resp_json)
+            _Response: dict = resp_json.get('Response')
+            _Data: dict = _Response.get('Data')
+            assert _Data, f'get_cert host={host} params={params} 返回 Data 错误: {_Data}'
+            return _Data
+        except AssertionError as e:
+            _logger.exception(e)
+            return {}  
+
 
     def import_start_cert(self, params, host=None):
         """

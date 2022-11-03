@@ -28,8 +28,30 @@ class CertificateInitiator(object):
                 "TlsCert": self.cert_content_dict["user_tls_cert"],
                 "TlsKey": self.cert_content_dict["user_tls_key"],
         }
-        res_json = self.bakend_client.import_start_cert(params)
+        org_params = {
+                "OrgId": chian_config.get("org_id"),
+                "OrgName": chian_config.get("org_name"),
+                "CaCert": self.cert_content_dict["org_ca"],
+
+        }
+        res_json = self.bakend_client.import_org_cert(org_params)
         assert res_json.get("Status") == "OK", "import_init_certs failed"
+        user_params = {
+                "OrgId": chian_config.get("org_id"),
+                "OrgName": chian_config.get("org_name"),
+                "NodeName": chian_config.get("node_name"),
+                "UserName": chian_config.get("user_name"),
+                "SignCert": self.cert_content_dict["user_sign_cert"],
+                "SignKey": self.cert_content_dict["user_sign_key"],
+                "TlsCert": self.cert_content_dict["user_tls_cert"],
+                "TlsKey": self.cert_content_dict["user_tls_key"],            
+
+        }
+        res_json = self.bakend_client.import_user_cert(user_params)
+        assert res_json.get("Status") == "OK", "import_init_certs failed"
+
+
+
 
     def dispatch(self):
         try:
