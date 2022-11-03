@@ -32,7 +32,8 @@ class CertificateInitiator(object):
                 "OrgId": chian_config.get("org_id"),
                 "OrgName": chian_config.get("org_name"),
                 "CaCert": self.cert_content_dict["org_ca"],
-
+                "CaKey": "",
+                "Algorithm": 1
         }
         res_json = self.bakend_client.import_org_cert(org_params)
         assert res_json.get("Status") == "OK", "import_init_certs failed"
