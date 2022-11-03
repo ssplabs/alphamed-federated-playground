@@ -44,8 +44,8 @@ class CertificateInitiator(object):
                 "SignCert": self.cert_content_dict["user_sign_cert"],
                 "SignKey": self.cert_content_dict["user_sign_key"],
                 "TlsCert": self.cert_content_dict["user_tls_cert"],
-                "TlsKey": self.cert_content_dict["user_tls_key"],            
-
+                "TlsKey": self.cert_content_dict["user_tls_key"],   
+                "Algorithm": 1 
         }
         res_json = self.bakend_client.import_user_cert(user_params)
         assert res_json.get("Status") == "OK", "import_init_certs failed"
