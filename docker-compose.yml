@@ -18,6 +18,21 @@ services:
       TZ: Asia/Shanghai
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--max_allowed_packet=200M']
 
+  alphamed_minio:
+    image: minio/minio
+    container_name: alphamed-minio
+    ports:
+      - 9030:9000
+      - 9040:9040
+    environment:
+      MINIO_SERVER_URL: "${NODE_SCHEMA}${NODE_HOSTNAME}:9030"
+      MINIO_BROWSER_REDIRECT_URL: "${NODE_SCHEMA}${NODE_HOSTNAME}:9040"
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio_storage:/data
+    command:  server --console-address ":9040" /data
+
 
   chain-connector:
     depends_on:
@@ -58,7 +73,7 @@ services:
       - "21010-21020:21010-21020"
     restart: always
     volumes:
-      - model_data:/data/alphamed-federated-dataset
+      - runtime_data:/data/alphamed-federated
 
   playground-jupyter:
     depends_on:
@@ -74,7 +89,7 @@ services:
       - "9010:8000"
     restart: always
     volumes:
-      - model_data:/data/alphamed-federated-dataset:ro
+      - runtime_data:/data/alphamed-federated:ro
       - code_data:/app/db
 
   playground-frontend:
@@ -92,12 +107,12 @@ services:
 
 volumes:
   db_data: {}
-  model_data:
+  runtime_data:
     driver: local
     driver_opts:
       o: bind
       type: none
-      device: /data/alphamed/alphamed-dataset
+      device: /data/alphamed/alphamed-runtime
   code_data:
     driver: local
     driver_opts:
@@ -110,3 +125,10 @@ volumes:
       o: bind
       type: none
       device: /data/alphamed/alphamed-database/init
+  minio_storage:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /data/alphamed/alphamed-storage      
+      
