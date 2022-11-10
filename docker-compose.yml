@@ -33,6 +33,17 @@ services:
       - minio_storage:/data
     command:  server --console-address ":9040" /data
 
+  playground-dataset:
+    container_name: playground-dataset
+    build:
+      context: git@github.com:ssplabs/nodejs-api-playground-node.git#dev
+      dockerfile: Dockerfile
+      network: host
+    ports:
+      - 9020:80
+    environment: 
+      NODE_ENV: ${NODE_ENV}
+      MINIO_HOSTNAME: ${MINIO_HOSTNAME}
 
   chain-connector:
     depends_on:
