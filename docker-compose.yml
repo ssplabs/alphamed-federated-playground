@@ -79,6 +79,8 @@ services:
       context: git@github.com:ssplabs/federated-service.git#develop
       dockerfile: Dockerfile
       network: host
+    environment:
+      FED_ENV: "${FED_ENV}" 
     ports:
       - "9080:9080"
       - "21010-21020:21010-21020"
