@@ -165,4 +165,26 @@ python3 main.py subscribe_contract
 ```
 #### 系统初始化完毕
 ### 开始第一个联邦学习任务 
-    
+
+### AUTOML系统初始化以及启动
+1. 编辑.env配置文件
+```
+MINIO_ROOT_USER="admin" # minio 存储的用户名配置
+MINIO_ROOT_PASSWORD="12345678"
+
+NODE_SCHEMA="http://" # 节点的请求协议 http/https
+NODE_HOSTNAME="{ip}" # 节点的IP一般这里填写公网IP
+MINIO_HOSTNAME="{eth0-ip}" # 存储的IP 为了更快速的传输数据，一般填写内网IP
+NODE_ENV="test" # 环境变量
+
+CVAT_HOST="{ip}" # 标注工具链 cvat的地址配置
+```
+2. 安装系统主体
+```
+docker-compose --env-file=.env up -d # cpu 环境
+docker-compose --env-file=.env -f docker-compose-cuda.yml up -d   # gpu 环境
+```
+4. 安装标注工具链
+```
+docker-compose --env-file=.env -f cvat_compose.yml up -d
+```
