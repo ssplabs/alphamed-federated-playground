@@ -105,19 +105,6 @@ services:
       - runtime_data:/data/alphamed-federated:ro
       - code_data:/app/db
 
-  playground-frontend:
-    depends_on:
-      - federated-service
-    container_name: alphamed-federated-playground-frontend
-    build:
-      context: git@github.com:ssplabs/alpha-med-pc.git#master
-      dockerfile: Dockerfile
-      network: host
-    hostname: playground-frontend
-    ports:
-      - "9000:9000"
-    restart: always
-
 volumes:
   db_data: {}
   runtime_data:
