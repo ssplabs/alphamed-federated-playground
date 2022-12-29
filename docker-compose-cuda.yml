@@ -22,15 +22,13 @@ services:
     container_name: alphamed-minio
     ports:
       - 9030:9000
-      - 9040:9040
+      - 9040:9001
     environment:
-      MINIO_SERVER_URL: "${NODE_SCHEMA}${NODE_HOSTNAME}:9030"
-      MINIO_BROWSER_REDIRECT_URL: "${NODE_SCHEMA}${NODE_HOSTNAME}:9040"
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
       - minio_storage:/data
-    command:  server --console-address ":9040" /data
+    command: server --console-address ":9001" /data
 
   playground-dataset:
     container_name: playground-dataset
