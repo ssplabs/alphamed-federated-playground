@@ -23,15 +23,13 @@ services:
     container_name: alphamed-minio
     ports:
       - 9030:9000
-      - 9040:9040
+      - 9040:9001
     environment:
-      MINIO_SERVER_URL: "${NODE_SCHEMA}${NODE_HOSTNAME}:9030"
-      MINIO_BROWSER_REDIRECT_URL: "${NODE_SCHEMA}${NODE_HOSTNAME}:9040"
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
       - minio_storage:/data
-    command:  server --console-address ":9040" /data
+    command: server --console-address ":9001" /data
 
   playground-dataset:
     container_name: playground-dataset
@@ -41,7 +39,7 @@ services:
       network: host
     ports:
       - 9020:80
-    environment: 
+    environment:
       NODE_ENV: ${NODE_ENV}
       MINIO_HOSTNAME: ${MINIO_HOSTNAME}
 
@@ -74,13 +72,13 @@ services:
     depends_on:
       - federated_db
       - chain-connector
-    container_name: alphamed-federated-service    
+    container_name: alphamed-federated-service
     build:
       context: git@github.com:ssplabs/federated-service.git#release/v0.3.0
       dockerfile: Dockerfile
       network: host
     environment:
-      FED_ENV: "${FED_ENV}" 
+      FED_ENV: "${FED_ENV}"
     ports:
       - "9080:9080"
       - "21010-21020:21010-21020"
@@ -130,5 +128,4 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: /data/alphamed/alphamed-storage      
-      
+      device: /data/alphamed/alphamed-storage
