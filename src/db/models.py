@@ -95,7 +95,7 @@ class NodeDevOverview:
             self, c.name, None) for c in self.__table__.columns}
 
 
-@mapper_registry
+@mapper_registry.mapped
 @dataclass
 class NodeLicense:
     __sa_dataclass_metadata_key__ = "sa"
