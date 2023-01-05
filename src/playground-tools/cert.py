@@ -54,9 +54,12 @@ class CertificateInitiator(object):
 
     def dispatch(self):
         try:
+            res = ExecShellUnix("dmidecode -s  system-serial-number")
+            import pdb
+            pdb.set_trace()
             self.upload_file()
             self.import_init_certs()
-            res = ExecShellUnix("dmidecode -s  system-serial-number")
+
             # save a file and the db
 
         except AssertionError as e:
