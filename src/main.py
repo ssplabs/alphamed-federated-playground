@@ -1,9 +1,16 @@
+import logging
 import datetime
-import yaml
-from pathlib import Path
 from optparse import OptionParser
-from cert import CertificateInitiator
-from subscribe import Subscribe
+
+import sqlalchemy
+from core.database import BaseDatabase
+from db.models import mapper_registry
+from core.install import app_install
+
+_logger = logging.getLogger("app")
+logging.info("Project core install start.")
+app = app_install()
+logging.info("Project core install completed.")
 
 
 class Manager(object):
@@ -11,46 +18,42 @@ class Manager(object):
         self.parser = OptionParser(usage="usage: % params [options] arg")
         self.default_date = datetime.date.today()
         self.params_dict = dict()
-        self.config =  yaml.safe_load(Path("../config/config.yml").read_text())
 
-    def init_cert(self):
+    @staticmethod
+    def create_tables():
+        print("create_tables")
+        from core.database import engine
+        mapper_registry.metadata.create_all(engine)
+        metadata = sqlalchemy.MetaData(BaseDatabase)
+        metadata.create_all(engine)
+
+    def run_server(self):
         """
         :return:
         """
-        CertificateInitiator(config=self.config).dispatch()
-
-    def subscribe(self):
-        """
-        :return:
-        """
-        Subscribe(config=self.config).dispatch()
-
-    def subscribe_contract(self):
-        """
-        :return:
-        """
-        Subscribe(config=self.config).dispatch_contract()
-
-        
+        import uvicorn
+        _logger.info('begin run : %s' %
+                     datetime.datetime.now().strftime('%Y%m%d %H:%M:%S'))
+        uvicorn.run(app="main:app", host="0.0.0.0", port=9088, log_level="info", reload=True, debug=False,
+                    workers=2)
+        _logger.info('end run : %s' %
+                     datetime.datetime.now().strftime('%Y%m%d %H:%M:%S'))
 
 
 if __name__ == "__main__":
     import sys
-
     input_arg = sys.argv[1]
-    if input_arg in ("-h", "--help") or input_arg not in ('init_cert', "subscribe_chain", "subscribe_contract"):
-        print("usage: main.py init_cert init the chain user and org cert")
-        print("usage: main.py subscribe_chain subscribe a chain node")
-        print("usage: main.py subscribe_contract subscribe chain contract invoke")
-        print("usage: main.py -h/--help given the help ")
+    if input_arg in ("-h", "--help") or input_arg not in (
+            'runserver', 'syncdb'):
+        print("usage: main.py runserver for start a web server")
+        print("usage: main.py syncdb for create database table")
+        print("usage: main.py -h/--help given the help message")
         sys.exit(2)
     else:
-        if input_arg == "init_cert":
-            flag = Manager().init_cert()
-            print(f"init_cert {flag}")
-        elif input_arg == "subscribe_chain":
-            flag = Manager().subscribe()
-            print(f"subscribe chain {flag}")
+        if input_arg == "runserver":
+            Manager().run_server()
+        elif input_arg == "syncdb":
+            Manager().create_tables()
         else:
-            flag = Manager().subscribe_contract()
-            print(f"subscribe contract {flag}")
+            print("unknown arg !")
+            sys.exit(-1)
