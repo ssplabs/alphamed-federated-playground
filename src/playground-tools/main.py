@@ -1,17 +1,13 @@
 import datetime
-import os
 import sys
+import yaml
 from optparse import OptionParser
 from pathlib import Path
 
-import yaml
+sys.path.append(Path(__file__).resolve().parent.parent.as_posix())
 
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-try:
-    from cert import CertificateInitiator
-    from subscribe import Subscribe
-except ImportError as e:
-    print(e.__repr__())
+from cert import CertificateInitiator
+from subscribe import Subscribe
 
 
 class Manager(object):
@@ -21,44 +17,35 @@ class Manager(object):
         self.params_dict = dict()
         self.config = yaml.safe_load(Path("../configs/config.yml").read_text())
 
-    def init_cert(self):
+    def init_chain_connector(self):
         """
         :return:
         """
+        print("start init cert...")
         CertificateInitiator(config=self.config).dispatch()
-
-    def subscribe(self):
-        """
-        :return:
-        """
+        print("start init subscribe node ...")
         Subscribe(config=self.config).dispatch()
-
-    def subscribe_contract(self):
-        """
-        :return:
-        """
+        print("start init subscribe contact ...")
         Subscribe(config=self.config).dispatch_contract()
 
 
 if __name__ == "__main__":
-    import sys
 
     input_arg = sys.argv[1]
-    if input_arg in ("-h", "--help") or input_arg not in ('init_cert', "subscribe_chain", "subscribe_contract"):
-        print("usage: main.py init_cert init the chain user and org cert")
-        print("usage: main.py subscribe_chain subscribe a chain node")
-        print("usage: main.py subscribe_contract subscribe chain contract invoke")
-        print("usage: main.py subscribe_contract subscribe chain contract invoke")
-        print("usage: main.py license register host license")
+    if input_arg in ("-h", "--help") or input_arg not in ('init_chain', "init_playground"):
+        print("usage: main.py init_chain to start the chain connector !")
+        print("usage: main.py init_playground try to start init the playground platform")
         print("usage: main.py -h/--help given the help ")
         sys.exit(2)
     else:
-        if input_arg == "init_cert":
-            Manager().init_cert()
-            print(f"init_cert successfully")
-        elif input_arg == "subscribe_chain":
-            Manager().subscribe()
-            print(f"subscribe chain  successfully")
+        if input_arg == "init_chain":
+            Manager().init_chain_connector()
+            print(f"init_chain successfully")
+        elif input_arg == "init_playground":
+            Manager().init_chain_connector()
+            print(f"init_playground  successfully")
         else:
-            Manager().subscribe_contract()
-            print(f"subscribe contract  successfully")
+            print("unknown the input arg ")
+            print("usage: main.py init_chain to start the chain connector !")
+            print("usage: main.py init_playground try to start init the playground platform")
+            print("usage: main.py -h/--help given the help ")

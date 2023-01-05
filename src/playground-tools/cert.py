@@ -8,6 +8,7 @@ class CertificateInitiator(object):
         self.backend_client = BackendClient()
         self.config = config
         self.cert_content_dict = dict()
+        self.machine = None
 
     def upload_file(self):
         cert_dict = self.config.get('chain').get('cert')
@@ -55,8 +56,10 @@ class CertificateInitiator(object):
     def dispatch(self):
         try:
             res = ExecShellUnix("dmidecode -s  system-serial-number")
-            import pdb
-            pdb.set_trace()
+            if not res:
+                print("please insert dmidecode by yum or apt")
+                exit(-1)
+            machine_code = res[0].strip()
             self.upload_file()
             self.import_init_certs()
 
