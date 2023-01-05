@@ -1,5 +1,5 @@
 import psutil
-from utils import ToSizeString, ExecShellUnix
+from libs.other_utils import ExecShellUnix
 
 
 class DiskInfo(object):

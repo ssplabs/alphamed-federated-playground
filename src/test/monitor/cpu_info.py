@@ -2,7 +2,7 @@ import psutil
 import re
 import time
 from typing import List, Dict, Any
-from utils import readFile, ExecShellUnix
+from libs.other_utils import readFile, ExecShellUnix
 
 
 class CpuConstants:

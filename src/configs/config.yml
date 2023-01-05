@@ -17,8 +17,8 @@ chain:
   - name: "task"
     version: "1.0"
   cert:
-    org_ca: ../config/cert/org.crt
-    user_tls_cert: ../config/cert/user.tls.crt
-    user_tls_key: ../config/cert/user.tls.key
-    user_sign_cert: ../config/cert/user.sign.crt
-    user_sign_key: ../config/cert/user.sign.key
+    org_ca: ../configs/cert/org.crt
+    user_tls_cert: ../configs/cert/user.tls.crt
+    user_tls_key: ../configs/cert/user.tls.key
+    user_sign_cert: ../configs/cert/user.sign.crt
+    user_sign_key: ../configs/cert/user.sign.key

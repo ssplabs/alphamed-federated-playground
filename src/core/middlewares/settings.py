@@ -6,7 +6,7 @@ from starlette.responses import Response
 
 def settings_middleware(app, config_obj):
     if config_obj.SECRET_KEY is None:
-        raise RuntimeError('You have to set SECRET_KEY in the config module')
+        raise RuntimeError('You have to set SECRET_KEY in the configs module')
 
     app.config = config_obj
 

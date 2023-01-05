@@ -1,6 +1,6 @@
 import psutil
-from typing import List, Dict, Any
-from utils import ToSizeString
+from typing import Dict
+from libs.other_utils import ToSizeString
 
 
 class MemoryInfo(object):
