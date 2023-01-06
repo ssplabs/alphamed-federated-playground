@@ -23,7 +23,8 @@ class PlaygroundInitialization(object):
 
     def init_federate_playground(self):
         ret = self.fed_client.node_init(
-            {"chain_id": self.chain_config.get("chain_id"), "node_machine_code": self.machine_code})
+            {"chain_id": self.chain_config.get("chain_id"), "node_machine_code": self.machine_code,
+             "node_ip": self.config.get("local_ip")})
         assert ret.get("ok") == "", "sync chain subscribe failed by request res str(ret)"
 
     def dispatch(self):
@@ -37,4 +38,3 @@ class PlaygroundInitialization(object):
         self.save_machine_code()
         print("初始化系统。。。")
         self.init_federate_playground()
-

@@ -2,10 +2,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import TYPE_CHECKING, Optional
 from sqlalchemy.sql import sqltypes
-from sqlalchemy.dialects.mysql import BIGINT, INTEGER, LONGTEXT, MEDIUMBLOB, MEDIUMTEXT, TEXT, TINYINT, VARCHAR
 import sqlalchemy
 from sqlalchemy import Column
-from sqlalchemy import Index, text
 from enum import Enum
 from sqlalchemy.orm import registry
 
@@ -107,7 +105,7 @@ class NodeLicense:
     update_at: Optional[datetime] = field(metadata={
         "sa": Column(sqltypes.DateTime(timezone=True), server_default=sqlalchemy.func.now())}, )
     node_id: str = field(metadata={"sa": Column(sqltypes.String(80), nullable=False, index=True, doc="节点ID")})
-    license_hex: str = field(metadata={"sa": Column(sqltypes.String(80), nullable=False, doc="license串")})
+    license_code: str = field(metadata={"sa": Column(sqltypes.String(80), nullable=False, doc="license串")})
     status: Optional[NodeLicenseStatus] = field(
         metadata={"sa": Column(IntEnum(NodeLicenseStatus), nullable=False, default=NodeLicenseStatus.Disable)})
 
