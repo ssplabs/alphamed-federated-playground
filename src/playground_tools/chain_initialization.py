@@ -1,6 +1,6 @@
 import os
 import hashlib
-from playground_tools.client import BackendClient
+from playground_tools.chain_connector_client import ChainConnectorClient
 from db import db_initalization
 from libs.other_utils import ExecShellUnix
 
@@ -8,7 +8,7 @@ from libs.other_utils import ExecShellUnix
 class ChainInitialization(object):
 
     def __init__(self, config):
-        self.backend_client = BackendClient()
+        self.backend_client = ChainConnectorClient()
         self.config = config
         self.cert_content_dict = dict()
         self.chain_config = self.config.get('chain')
@@ -117,7 +117,7 @@ class ChainInitialization(object):
         if not res:
             print("please insert dmidecode by yum or apt")
             exit(-1)
-        self.node_id = hashlib.md5(res[0].strip().encode()).hexdigest()
+        self.node_id = hashlib.md5(res[0].strip().encode()).hexdigest().upper()
         init_cert_ret = self.init_cert()
         assert init_cert_ret, "init cert failed"
         subscribe_chain_ret = self.subscribe_chain()

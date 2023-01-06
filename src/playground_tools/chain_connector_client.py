@@ -2,10 +2,11 @@ import base64
 import requests
 import logging
 import os
+
 _logger = logging.getLogger()
 
 
-class BackendClient(object):
+class ChainConnectorClient(object):
     def __init__(self):
         self.headers = {
             'accept': 'application/json',
@@ -91,8 +92,7 @@ class BackendClient(object):
             return _Data
         except AssertionError as e:
             _logger.exception(e)
-            return {}  
-
+            return {}
 
     def import_user_cert(self, params, host=None):
         """
@@ -124,8 +124,7 @@ class BackendClient(object):
             return _Data
         except AssertionError as e:
             _logger.exception(e)
-            return {}  
-
+            return {}
 
     def import_start_cert(self, params, host=None):
         """
@@ -310,7 +309,7 @@ class BackendClient(object):
             _logger.exception(e)
             return {}
 
-    def subscribe_chain(self, params:dict, host=None):
+    def subscribe_chain(self, params: dict, host=None):
         """
             params: {
             "ChainId": "sspchain1",
@@ -340,7 +339,7 @@ class BackendClient(object):
             _logger.exception(e)
             return {}
 
-    def subscribe_contract(self, params:dict, host=None):
+    def subscribe_contract(self, params: dict, host=None):
         """
             params: {
                 "ChainId": "sspchain1",
@@ -364,8 +363,30 @@ class BackendClient(object):
         except AssertionError as e:
             _logger.exception(e)
             return {}
-        
 
+    def get_full_chain_subscribe(self, params: dict, host=None):
+        """
+            params: {
+            "ChainId": "string",
+            "Algorithm": 0 // 0 sm2 1 ecdsa
+            }
+        """
+        if not host:
+            host = self.bass_host
+            self.login()
+        else:
+            self.login(host=host)
+
+        try:
+            url = f"http://{host}:{self.bass_port}{self.base_path}GetFullSubscribeConfig"
+            resp_json, error = self.send_request(url, params)
+            _Response: dict = resp_json.get('Response')
+            _Data: dict = _Response.get('Data')
+            assert _Data, f'get full chain subscribe host={host} params={params} 返回 Data 错误: {_Data}'
+            return _Data
+        except AssertionError as e:
+            _logger.exception(e)
+            return {}
 
     @staticmethod
     def get_filename_from_header(resp_header):
@@ -403,9 +424,9 @@ class BackendClient(object):
 
         assert file_path, 'nothing to upload'
         assert (
-            isinstance(file_path, str)
-            and os.path.exists(file_path)
-            and os.path.isfile(file_path)
+                isinstance(file_path, str)
+                and os.path.exists(file_path)
+                and os.path.isfile(file_path)
         ), f'{file_path} does not exist or is not a file'
         file_name = os.path.split(file_path)[-1]
         if not host:
