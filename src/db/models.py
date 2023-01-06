@@ -33,11 +33,11 @@ class NodeNetworkStatus(Enum):
     Exception = -1
     Offline = -2
 
+
 class NodeLicenseStatus(Enum):
     Disable = 0
     Valid = 1
     Overdue = -1
-
 
 
 if TYPE_CHECKING:
@@ -110,6 +110,29 @@ class NodeLicense:
     license_hex: str = field(metadata={"sa": Column(sqltypes.String(80), nullable=False, doc="license串")})
     status: Optional[NodeLicenseStatus] = field(
         metadata={"sa": Column(IntEnum(NodeLicenseStatus), nullable=False, default=NodeLicenseStatus.Disable)})
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name, None).value if isinstance(getattr(self, c.name, None), Enum) else getattr(
+            self, c.name, None) for c in self.__table__.columns}
+
+
+@mapper_registry.mapped
+@dataclass
+class NodeInitRecord:
+    __sa_dataclass_metadata_key__ = "sa"
+    __tablename__ = 'node_init_record'
+
+    id: int = field(init=False, metadata={"sa": Column(sqltypes.BigInteger, primary_key=True, autoincrement=True)}, )
+    create_at: Optional[datetime] = field(
+        metadata={"sa": Column(sqltypes.DateTime(timezone=True), server_default=sqlalchemy.func.now())}, )
+    update_at: Optional[datetime] = field(metadata={
+        "sa": Column(sqltypes.DateTime(timezone=True), server_default=sqlalchemy.func.now())}, )
+    node_id: str = field(metadata={"sa": Column(sqltypes.String(80), nullable=False, index=True, doc="节点ID")})
+    node_init_type: str = field(metadata={"sa": Column(sqltypes.String(80), nullable=False, index=True,
+                                                       doc="初始化流程类型 chain_connector, playground")})
+    init_result: bool = field(metadata={"sa": Column(sqltypes.BOOLEAN, nullable=False, index=True, doc="初始化结果")})
+    init_content: str = field(metadata={"sa": Column(sqltypes.JSON, nullable=False, doc="各种杂乱的配置信息")})
+    message: str = field(metadata={"sa": Column(sqltypes.Text, nullable=False, doc="错误信息")})
 
     def to_dict(self):
         return {c.name: getattr(self, c.name, None).value if isinstance(getattr(self, c.name, None), Enum) else getattr(

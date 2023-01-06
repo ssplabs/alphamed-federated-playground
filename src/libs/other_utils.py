@@ -76,14 +76,14 @@ def ExecShellUnix(cmdstring: str, shell=True):
             mode='wb+',
             suffix='_succ',
             prefix='btex_' + rx,
-            dir='/dev/shm'
+            dir='/tmp'
         )
         err_f = tempfile.SpooledTemporaryFile(
             max_size=4096,
             mode='wb+',
             suffix='_err',
             prefix='btex_' + rx,
-            dir='/dev/shm'
+            dir='/tmp'
         )
         sub = subprocess.Popen(
             cmdstring,

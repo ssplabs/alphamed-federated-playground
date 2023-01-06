@@ -7,8 +7,6 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 CONFIG_FILE = Path.joinpath(Path(__file__).resolve().parent.parent.parent, "deployment_config/configs/configs.yml")
-import pdb
-pdb.set_trace()
 
 # ~~~~~ DATA_BASE ~~~~~
 
