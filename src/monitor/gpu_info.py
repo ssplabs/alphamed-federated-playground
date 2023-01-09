@@ -20,5 +20,10 @@ class GPUInfo(object):
         res = ExecShellUnix("nvidia-smi --query-gpu=gpu_name,memory.used,memory.total,gpu_uuid --format=csv")
         assert res, "only support nvidia gpu"
         assert "command not found" not in "".join(res), "only support nvidia gpu"
-        import pdb
-        pdb.set_trace()
+        res_line = "".join(res).split("\n")[1]
+        return {
+            "name": res_line[0],
+            "memory_used": res_line[1],
+            "memory_total": res_line[2],
+            "uuid": res_line[2],
+        }
