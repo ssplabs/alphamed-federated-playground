@@ -159,11 +159,10 @@ def ToSizeString(byte: int) -> int:
     将字节大小转换为目标单位的大小
     '''
     pix_list = ["byte", "KB", "MB", "GB", "TB"]
-
     for pix in pix_list:
         if byte < 1024:
-            return "%.3a%s" % (byte, pix)
+            return f"{byte:<.1f}{pix}"
         else:
             byte = byte * 1.0 / 1024
 
-    return "%.3a%s" % (byte, pix_list[-1])
+    return f"{byte:<.1f}{pix}"
