@@ -72,8 +72,6 @@ class DiskInfo(object):
             '/run/shm',
             '/run/user'
         ]
-        import pdb
-        pdb.set_trace()
         for tmp in temp:
             n += 1
             try:

@@ -1,17 +1,7 @@
-import base64
-import io
-import time
-import datetime
 import logging
-import uuid
 
-import json
-import os
-from typing import List
 import sqlalchemy
 import datetime
-from core import settings
-from fastapi import UploadFile
 from . import request
 import hashlib
 from sqlalchemy import column, desc
@@ -29,7 +19,7 @@ def check_license(db: Session, license_code):
     machine_code = res[0].strip()
     node_id = hashlib.md5(machine_code.encode()).hexdigest().upper()
     local_license_code = hashlib.sha256(node_id.encode()).hexdigest().upper()
-    assert local_license_code == license_code
+    assert local_license_code == license_code, "license code verify failed, please post a valid license code!"
     query = sqlalchemy.select(NodeLicense).where(column('license_code') == license_code)
     node_license: NodeLicense = db.execute(query).scalar_one_or_none()
     if node_license:

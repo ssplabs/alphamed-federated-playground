@@ -75,16 +75,35 @@ class Manager(object):
             print(f"init playground failed: {e}")
             exit(-1)
 
+    def monitor(self):
+        """
+        1. 如果已经初始化区块链 需要拷贝 federated_db.cmb_chain_subscribe -> federated_service_db.cmb_chain_subscribe
+        2. 初始化 federated_service_db.federated_node
+        3. 生成机器码license 【】
+        4. 提供接口验证机器码 【转调用service接口】
+        5. 提供接口获取节点监控数据
+        6. 提供接口获取节点各个服务的状态
+        """
+        try:
+            print("start monitor platform...")
+            from monitor.monitor import monitor
+            monitor()
+            print("success monitor platform ...")
+        except AssertionError as e:
+            print(f"init playground failed: {e}")
+            exit(-1)
+
 
 if __name__ == "__main__":
     import sys
 
     if len(sys.argv) <= 1 or sys.argv[1] in ("-h", "--help") or sys.argv[1] not in (
-            'runserver', 'syncdb', 'init_chain', "init_playground"):
+            'runserver', 'syncdb', 'init_chain', "init_playground", "monitor"):
         print("usage: main.py runserver for start a web server")
         print("usage: main.py syncdb for create database table")
         print("usage: main.py init_chain to start the chain connector !")
         print("usage: main.py init_playground try to start init the playground platform")
+        print("usage: main.py monitor start the platform monitor")
         print("usage: main.py -h/--help given the help message")
         sys.exit(2)
     else:
@@ -97,11 +116,14 @@ if __name__ == "__main__":
             Manager().init_chain_connector()
         elif input_arg == "init_playground":
             Manager().init_playground()
+        elif input_arg == "monitor":
+            Manager().monitor()
         else:
             print("unknown arg !")
             print("usage: main.py runserver for start a web server")
             print("usage: main.py syncdb for create database table")
             print("usage: main.py init_chain to start the chain connector !")
             print("usage: main.py init_playground try to start init the playground platform")
+            print("usage: main.py monitor start the platform monitor")
             print("usage: main.py -h/--help given the help message")
             sys.exit(-1)

@@ -66,6 +66,11 @@ class FederatedNode:
     content: str = field(metadata={"sa": Column(sqltypes.Text, nullable=True)})
     status: Optional[NodeNetworkStatus] = field(
         metadata={"sa": Column(IntEnum(NodeNetworkStatus), nullable=False, default=NodeNetworkStatus.Disable)})
+    cpu: str = field(metadata={"sa": Column(sqltypes.Text, nullable=True, doc="处理器【宿主机监控显示的cpu为超线程数量,虚拟机为核数】")})
+    gpu: str = field(metadata={"sa": Column(sqltypes.Text, nullable=True, doc="gpu")})
+    memory: str = field(metadata={"sa": Column(sqltypes.Text, nullable=True, doc="内存")})
+    disk: str = field(metadata={"sa": Column(sqltypes.Text, nullable=True, doc="硬盘")})
+    registry_date: datetime.date = field(metadata={"sa": Column(sqltypes.Date, nullable=True, doc="注册日期")})
 
     def to_dict(self):
         return {c.name: getattr(self, c.name, None).value if isinstance(getattr(self, c.name, None), Enum) else getattr(
