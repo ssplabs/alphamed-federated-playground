@@ -64,13 +64,18 @@ class FederatedNode:
         metadata={"sa": Column(sqltypes.String(80), nullable=False, index=True, doc="节点名称")})
 
     content: str = field(metadata={"sa": Column(sqltypes.Text, nullable=True)})
-    status: Optional[NodeNetworkStatus] = field(
+    network_status: Optional[NodeNetworkStatus] = field(
         metadata={"sa": Column(IntEnum(NodeNetworkStatus), nullable=False, default=NodeNetworkStatus.Disable)})
-    cpu: str = field(metadata={"sa": Column(sqltypes.Text, nullable=True, doc="处理器【宿主机监控显示的cpu为超线程数量,虚拟机为核数】")})
+    cpu: str = field(metadata={
+        "sa": Column(sqltypes.Text, nullable=True, doc="处理器【宿主机监控显示的cpu为超线程数量,虚拟机为核数】")})
     gpu: str = field(metadata={"sa": Column(sqltypes.Text, nullable=True, doc="gpu")})
     memory: str = field(metadata={"sa": Column(sqltypes.Text, nullable=True, doc="内存")})
     disk: str = field(metadata={"sa": Column(sqltypes.Text, nullable=True, doc="硬盘")})
     registry_date: datetime.date = field(metadata={"sa": Column(sqltypes.Date, nullable=True, doc="注册日期")})
+    machine_code: str = field(metadata={"sa": Column(sqltypes.String(100), nullable=True, doc="机器码")})
+    license_code: str = field(metadata={"sa": Column(sqltypes.String(80), nullable=False, doc="license串")})
+    license_status: Optional[NodeLicenseStatus] = field(
+        metadata={"sa": Column(IntEnum(NodeLicenseStatus), nullable=False, default=NodeLicenseStatus.Disable)})
 
     def to_dict(self):
         return {c.name: getattr(self, c.name, None).value if isinstance(getattr(self, c.name, None), Enum) else getattr(

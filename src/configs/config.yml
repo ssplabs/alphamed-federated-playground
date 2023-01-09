@@ -1,4 +1,9 @@
-local_ip: 192.168.1.133
+local_chain: true
+fed_node:
+  org_id: "alphamed-ssplabs"
+  org_name: "alphamedSSPLabs"
+  node_name: "ssplabsCVMBJ001"
+  node_host: 192.168.1.133
 backend:
   host: 127.0.0.1
 chain:
