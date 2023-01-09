@@ -21,9 +21,10 @@ class GPUInfo(object):
         assert res, "only support nvidia gpu"
         assert "command not found" not in "".join(res), "only support nvidia gpu"
         res_line = "".join(res).split("\n")[1]
+
         return {
-            "name": res_line[0],
-            "memory_used": res_line[1],
-            "memory_total": res_line[2],
-            "uuid": res_line[2],
+            "name": res_line.split(",")[0].strip(),
+            "memory_used": res_line.split(",")[1].strip(),
+            "memory_total": res_line.split(",")[2].strip(),
+            "uuid": res_line.split(",")[3].strip(),
         }
