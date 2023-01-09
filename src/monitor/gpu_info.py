@@ -14,7 +14,7 @@ class GPUInfo(object):
                 print("暂时不支持Windows系统")
         except Exception as err:
             print('获取GPU信息异常（unix: {}）：'.format(self.unix), err)
-            return []
+            return {}
 
     def get_gpu_info(self):
         res = ExecShellUnix("nvidia-smi --query-gpu=gpu_name,memory.used,memory.total,gpu_uuid --format=csv")

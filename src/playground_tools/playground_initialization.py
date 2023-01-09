@@ -32,7 +32,9 @@ class PlaygroundInitialization(object):
         assert ret.get("ok") == "", "sync chain subscribe failed by request res str(ret)"
 
     def dispatch(self):
-        self.gather_system_info()
+        system_info = self.gather_system_info()
+        import pdb
+        pdb.set_trace()
         res = ExecShellUnix("dmidecode -s  system-serial-number")
         if not res:
             print("please insert dmidecode by yum or apt")

@@ -162,8 +162,8 @@ def ToSizeString(byte: int) -> int:
 
     for pix in pix_list:
         if byte < 1024:
-            return "%.3a %s" % (byte, pix)
+            return "%.3a%s" % (byte, pix)
         else:
             byte = byte * 1.0 / 1024
 
-    return "%.3a %s" % (byte, pix_list[-1])
+    return "%.3a%s" % (byte, pix_list[-1])

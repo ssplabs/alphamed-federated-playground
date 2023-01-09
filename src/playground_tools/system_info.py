@@ -24,18 +24,33 @@ class SystemInfo(object):
             total += v
         return ToSizeString(all_used), ToSizeString(total)
 
-    def gather_cpu_info(self):
-
+    @staticmethod
+    def gather_cpu_info():
         res = CpuConstants(unix=True).get_cpu_info()
-        return "{0}*{1}".format(res["cpu_name"], res["cpu_core"])
+        return "{0} {1}核{2}线程".format(res["cpu_name"], res["cpu_core"], res["cpu_threads"])
+
+    @staticmethod
+    def gather_memory_info():
+        res = psutil.virtual_memory()
+        return ToSizeString(res.total)
+
+    @staticmethod
+    def gather_gpu_info():
+        from monitor.gpu_info import GPUInfo
+        res = GPUInfo(unix=True).get_info()
+        return res
 
     def dispatch(self):
         disk_used, disk_total = self.gather_disk_info()
         cpu_info = self.gather_cpu_info()
+        gpu_info = self.gather_gpu_info()
 
-        {
+        ret_dict = {
             "disk": "{0}/{1}".format(disk_used, disk_total),
-            "cpu": cpu_info
+            "cpu": cpu_info.strip(),
+            "memory": self.gather_memory_info(),
+            "gpu": ""
         }
-        import pdb
-        pdb.set_trace()
+        if gpu_info:
+            ret_dict["gpu"] = "{0} {1}".format(gpu_info["name"], gpu_info["memory_total"])
+        return ret_dict
