@@ -23,7 +23,7 @@ class Manager(object):
         self.parser = OptionParser(usage="usage: % params [options] arg")
         self.default_date = datetime.date.today()
         self.params_dict = dict()
-        self.config = yaml.safe_load(Path("./configs/config.yml").read_text())
+        self.config = yaml.safe_load(Path("../configs/config.yml").read_text())
         self.create_tables()
 
     @staticmethod

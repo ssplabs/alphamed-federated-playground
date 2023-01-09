@@ -20,7 +20,7 @@ class PlaygroundInitialization(object):
         self.node_id = None
 
     def save_machine_code(self):
-        with open("./configs/register_code.txt", "w") as f:
+        with open("../configs/register_code.txt", "w") as f:
             f.write(self.license_code)
 
     def gather_system_info(self):
