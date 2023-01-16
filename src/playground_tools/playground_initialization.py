@@ -43,7 +43,7 @@ class PlaygroundInitialization(object):
             }
         """
         ret = self.fed_client.node_init(params)
-        assert ret.get("code") == 0, "sync chain subscribe failed by request res str(ret)"
+        assert ret.get("code") == 0, "init federate playground failed by request res str(ret)"
 
     def dispatch(self):
         system_info = self.gather_system_info()
