@@ -33,7 +33,7 @@ services:
   playground-dataset:
     container_name: playground-dataset
     build:
-      context: git@github.com:ssplabs/nodejs-api-playground-node.git#dev
+      context: git@github.com:ssplabs/nodejs-api-playground-node.git#release
       dockerfile: Dockerfile
       network: host
     ports:
