@@ -80,7 +80,7 @@ services:
       - "21010-21020:21010-21020"
     restart: always
     volumes:
-      - model_data:/data/alphamed-federated-dataset
+      - runtime_data:/data/alphamed-federated:ro
     environment:
       NVIDIA_DRIVER_CAPABILITIES: compute,utility
       NVIDIA_VISIBLE_DEVICES: all
@@ -104,7 +104,7 @@ services:
       - "9010:8000"
     restart: always
     volumes:
-      - model_data:/data/alphamed-federated-dataset:ro
+      - runtime_data:/data/alphamed-federated:ro
       - code_data:/app/db
     environment:
       NVIDIA_DRIVER_CAPABILITIES: compute,utility
