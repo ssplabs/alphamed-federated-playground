@@ -59,7 +59,7 @@ services:
       - federated_db
     container_name: alphamed-playground-backend
     build:
-      context: git@github.com:ssplabs/playground-backend.git#master
+      context: git@github.com:ssplabs/playground-backend.git#release/v2.2
       dockerfile: Dockerfile
       network: host
     ports:

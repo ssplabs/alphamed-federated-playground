@@ -61,7 +61,7 @@ services:
       - chain-connector
     container_name: alphamed-playground-backend
     build:
-      context: git@github.com:ssplabs/playground-backend.git#develop
+      context: git@github.com:ssplabs/playground-backend.git#release/v2.2
       dockerfile: Dockerfile
       network: host
     ports:
