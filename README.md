@@ -2,6 +2,21 @@
 医学联邦学习计算平台
 
 ## 版本说明
+### v1.0.0
+修改项目的功能边界，增加学习平台节点部署的功能，学习平台相关监控的一些功能，以及license管理的功能
+#### 功能
+1. 增加机器码生成功能
+2. 增加服务器本身监控上报
+3. 增加服务监控存活服务
+4. 增加接入平台SaaS的服务
+#### 改进
+1. 优化本身部署流程以及参数
+#### Bug修复
+#### 平台改进
+1. 增加节点管理
+2. 增加我得notebook
+3. 增加任务删除、项目删除等管理功能
+
 ### v0.3.0
 #### 功能
 1. 支持自动化建模
@@ -65,13 +80,18 @@
 │   │   ├── user.tls.crt
 │   │   └── user.tls.key
 │   └── config.yml
+├── cvat
+│   └── apps
+│       └── iam
+│           └── rules
+│               ├── ***
+├── cvat_compose.yml
+├── docker-compose-cuda.yml
 ├── docker-compose.yml
-└── src
+├── init_db.sql
+├── src
+└── tools
     ├── __init__.py
-    ├── __pycache__
-    │   ├── backend_client.cpython-39.pyc
-    │   ├── cert_init.cpython-39.pyc
-    │   └── subscribe.cpython-39.pyc
     ├── cert.py
     ├── client.py
     ├── main.py
@@ -190,12 +210,11 @@ python3 main.py subscribe_contract
 MINIO_ROOT_USER="admin" # minio 存储的用户名配置
 MINIO_ROOT_PASSWORD="12345678"
 
-NODE_SCHEMA="http://" # 节点的请求协议 http/https
-NODE_HOSTNAME="{ip}" # 节点的IP一般这里填写公网IP
-MINIO_HOSTNAME="{eth0-ip}" # 存储的IP 为了更快速的传输数据，一般填写内网IP
-NODE_ENV="test" # 环境变量
 
-CVAT_HOST="{ip}" # 标注工具链 cvat的地址配置
+MINIO_HOSTNAME="{eth0-ip}" # 存储的IP 为了更快速的传输数据，一般填写内网IP
+NODE_ENV="release" # 环境变量
+FED_ENV="prod" # 环境变量
+CVAT_HOST="localhost" # 标注工具链 cvat的地址配置
 ```
 2. 安装系统主体
 ```

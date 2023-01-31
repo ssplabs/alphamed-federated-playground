@@ -2,10 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+./src/federated.db
 # C extensions
 *.so
-
+.idea
+tmp
 # Distribution / packaging
 .Python
 build/
