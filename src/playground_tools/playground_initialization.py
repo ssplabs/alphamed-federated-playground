@@ -36,6 +36,8 @@ class PlaygroundInitialization(object):
                 "cpu": "4核8线程",
                 "memory": "8.0GB",
                 "gpu": "",
+                "system_product_name": "",
+                "system_manufacturer": "",
                 "node_id": "QmYX5KatFyFve3xVjadX2h7fEt1SzpdA8wnQsQ4v9muCyR",
                 "node_ip": "172.16.0.2",
                 "org_name": "alphamedSSPLabs",

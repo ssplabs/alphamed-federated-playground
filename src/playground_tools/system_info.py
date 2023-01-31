@@ -40,8 +40,31 @@ class SystemInfo(object):
 
     @staticmethod
     def gather_memory_info():
-        res = psutil.virtual_memory()
-        return ToSizeString(res.total)
+        res = ExecShellUnix("dmidecode -t memory | grep 'Maximum Capacity'")
+        assert res, "gather memory into failed"
+        for line in res:
+            if re.search(r"Maximum Capacity: \d{1,10}", line.strip()):
+                return line.strip().strip("Maximum Capacity:").strip()
+        raise AssertionError("do not find memory info")
+
+    @staticmethod
+    def gather_system_product_name():
+        res = ExecShellUnix("dmidecode -s system-product-name")
+        assert res, "gather system-product-name failed"
+        for line in res:
+            if line.strip() and "Bad address" not in line.strip():
+                return line.strip()
+        raise AssertionError("do not find system-product-name info")
+
+    @staticmethod
+    def gather_system_manufacturer():
+        res = ExecShellUnix("dmidecode -s system-manufacturer")
+        assert res, "gather system-manufacturer failed"
+        for line in res:
+            if line.strip() and "Bad address" not in line.strip():
+                return line.strip()
+        raise AssertionError("do not find system-manufacturer info")
+        
 
     @staticmethod
     def gather_gpu_info():
@@ -62,4 +85,8 @@ class SystemInfo(object):
         }
         if gpu_info:
             ret_dict["gpu"] = "{0} {1}".format(gpu_info["name"], gpu_info["memory_total"])
+        
+        ret_dict["system_product_name"] = self.gather_system_product_name()
+        ret_dict["system_manufacturer"] = self.gather_system_manufacturer()
+        print(ret_dict)
         return ret_dict
