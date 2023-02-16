@@ -17,18 +17,6 @@ services:
       TZ: Asia/Shanghai
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--max_allowed_packet=200M']
 
-  playground-backend:
-    depends_on:
-      - federated_db
-    container_name: alphamed-playground-backend
-    build:
-      context: git@github.com:ssplabs/playground-backend.git#release/v0.2.0
-      dockerfile: Dockerfile
-      network: host
-    ports:
-      - "9060:9060"
-    restart: always
-
   federated-service:
     depends_on:
       - federated_db

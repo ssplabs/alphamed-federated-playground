@@ -154,11 +154,15 @@ def ToSizeString(byte: int) -> str:
     return re()
 
 
-def ToSizeString(byte: int) -> int:
+def ToSizeString(byte: int, start_pix="byte") -> int:
     '''
     将字节大小转换为目标单位的大小
     '''
     pix_list = ["byte", "KB", "MB", "GB", "TB"]
+    if start_pix not in pix_list:
+        print("Invalid start_pix not in pix_list")
+        return False
+    pix_list = pix_list[pix_list.index(start_pix):]
     for pix in pix_list:
         if byte < 1024:
             return f"{byte:<.1f}{pix}"
