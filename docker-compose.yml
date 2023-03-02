@@ -60,7 +60,7 @@ services:
       - federated_db
     container_name: alphamed-federated-service
     build:
-      context: git@github.com:ssplabs/federated-service.git#master
+      context: git@github.com:ssplabs/federated-service.git#release/v2.3
       dockerfile: Dockerfile
       network: host
     environment:
@@ -79,7 +79,7 @@ services:
 
     hostname: playground-jupyter
     build:
-      context: git@github.com:ssplabs/playground-jupyter.git#master
+      context: git@github.com:ssplabs/playground-jupyter.git#release/v2.3
       dockerfile: Dockerfile
       network: host
     ports:
