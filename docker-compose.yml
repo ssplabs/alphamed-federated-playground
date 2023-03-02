@@ -34,7 +34,7 @@ services:
   playground-dataset:
     container_name: playground-dataset
     build:
-      context: git@github.com:ssplabs/nodejs-api-playground-node.git#dev
+      context: git@github.com:ssplabs/nodejs-api-playground-node.git#release
       dockerfile: Dockerfile
       network: host
     ports:
@@ -61,7 +61,7 @@ services:
       - chain-connector
     container_name: alphamed-playground-backend
     build:
-      context: git@github.com:ssplabs/playground-backend.git#develop
+      context: git@github.com:ssplabs/playground-backend.git#master
       dockerfile: Dockerfile
       network: host
     ports:
@@ -74,7 +74,7 @@ services:
       - chain-connector
     container_name: alphamed-federated-service
     build:
-      context: git@github.com:ssplabs/federated-service.git#develop
+      context: git@github.com:ssplabs/federated-service.git#master
       dockerfile: Dockerfile
       network: host
     environment:
@@ -93,7 +93,7 @@ services:
 
     hostname: playground-jupyter
     build:
-      context: git@github.com:ssplabs/playground-jupyter.git#develop
+      context: git@github.com:ssplabs/playground-jupyter.git#master
       dockerfile: Dockerfile
       network: host
     ports:
