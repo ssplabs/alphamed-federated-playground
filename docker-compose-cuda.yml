@@ -6,6 +6,7 @@ services:
     container_name: alphamed-federated-database
     volumes:
       - db_data:/var/lib/mysql
+      - database_init:/docker-entrypoint-initdb.d
     restart: always
     ports:
       - "9306:3306"
@@ -16,14 +17,50 @@ services:
       MYSQL_DATABASE: federated_db
       TZ: Asia/Shanghai
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--max_allowed_packet=200M']
+  
+  alphamed_minio:
+    image: minio/minio
+    container_name: alphamed-minio
+    ports:
+      - 9030:9000
+      - 9040:9001
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio_storage:/data
+    command: server --console-address ":9001" /data
+
+  playground-dataset:
+    container_name: playground-dataset
+    build:
+      context: git@github.com:ssplabs/nodejs-api-playground-node.git#dev
+      dockerfile: Dockerfile
+      network: host
+    ports:
+      - 9020:80
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      MINIO_HOSTNAME: ${MINIO_HOSTNAME}
+
+  chain-connector:
+    depends_on:
+      - federated_db
+    container_name: alphamed-chain-connector
+    build:
+      context: git@github.com:ssplabs/ssplabs-chain-connector.git#master
+      dockerfile: Dockerfile
+      network: host
+    ports:
+      - "9070:9070"
+    restart: always
 
   federated-service:
     depends_on:
       - federated_db
-      - playground-backend
     container_name: alphamed-federated-service    
     build:
-      context: git@github.com:ssplabs/federated-service.git#release/v0.2.0_cuda11
+      context: git@github.com:ssplabs/federated-service.git#release/v2.3_cuda11
       dockerfile: Dockerfile
       network: host
     ports:
@@ -31,7 +68,7 @@ services:
       - "21010-21020:21010-21020"
     restart: always
     volumes:
-      - model_data:/data/alphamed-federated-dataset
+      - runtime_data:/data/alphamed-federated
     environment:
       NVIDIA_DRIVER_CAPABILITIES: compute,utility
       NVIDIA_VISIBLE_DEVICES: all
@@ -48,14 +85,14 @@ services:
 
     hostname: playground-jupyter
     build:
-      context: git@github.com:ssplabs/playground-jupyter.git#release/v0.2.0_cuda11
+      context: git@github.com:ssplabs/playground-jupyter.git#release/v2.3_cuda11
       dockerfile: Dockerfile
       network: host
     ports:
       - "9010:8000"
     restart: always
     volumes:
-      - model_data:/data/alphamed-federated-dataset:ro
+      - runtime_data:/data/alphamed-federated:ro
       - code_data:/app/db
     environment:
       NVIDIA_DRIVER_CAPABILITIES: compute,utility
@@ -66,30 +103,29 @@ services:
           devices:
             - capabilities: [gpu]      
 
-  playground-frontend:
-    depends_on:
-      - federated-service
-    container_name: alphamed-federated-playground-frontend
-    build:
-      context: git@github.com:ssplabs/alpha-med-pc.git#master
-      dockerfile: Dockerfile
-      network: host
-    hostname: playground-frontend
-    ports:
-      - "9000:9000"
-    restart: always
-
 volumes:
   db_data: {}
-  model_data:
+  runtime_data:
     driver: local
     driver_opts:
       o: bind
       type: none
-      device: /data/alphamed/alphamed-dataset
+      device: /data/alphamed/alphamed-runtime  
   code_data:
     driver: local
     driver_opts:
       o: bind
       type: none
       device: /data/alphamed/alphamed-code
+  database_init:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /data/alphamed/alphamed-database/init
+  minio_storage:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /data/alphamed/alphamed-storage      
