@@ -6,6 +6,7 @@ services:
     container_name: alphamed-federated-database
     volumes:
       - db_data:/var/lib/mysql
+      - database_init:/docker-entrypoint-initdb.d
     restart: always
     ports:
       - "9306:3306"
@@ -16,7 +17,7 @@ services:
       MYSQL_DATABASE: federated_db
       TZ: Asia/Shanghai
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--max_allowed_packet=200M']
-
+  
   alphamed_minio:
     image: minio/minio
     container_name: alphamed-minio
@@ -54,25 +55,12 @@ services:
       - "9070:9070"
     restart: always
 
-  playground-backend:
-    depends_on:
-      - federated_db
-    container_name: alphamed-playground-backend
-    build:
-      context: git@github.com:ssplabs/playground-backend.git#master
-      dockerfile: Dockerfile
-      network: host
-    ports:
-      - "9060:9060"
-    restart: always
-
   federated-service:
     depends_on:
       - federated_db
-      - playground-backend
     container_name: alphamed-federated-service    
     build:
-      context: git@github.com:ssplabs/federated-service.git#master
+      context: git@github.com:ssplabs/federated-service.git#release/v2.3_cuda11
       dockerfile: Dockerfile
       network: host
     ports:
@@ -80,7 +68,7 @@ services:
       - "21010-21020:21010-21020"
     restart: always
     volumes:
-      - model_data:/data/alphamed-federated-dataset
+      - runtime_data:/data/alphamed-federated
     environment:
       NVIDIA_DRIVER_CAPABILITIES: compute,utility
       NVIDIA_VISIBLE_DEVICES: all
@@ -97,14 +85,14 @@ services:
 
     hostname: playground-jupyter
     build:
-      context: git@github.com:ssplabs/playground-jupyter.git#master
+      context: git@github.com:ssplabs/playground-jupyter.git#release/v2.3_cuda11
       dockerfile: Dockerfile
       network: host
     ports:
       - "9010:8000"
     restart: always
     volumes:
-      - model_data:/data/alphamed-federated-dataset:ro
+      - runtime_data:/data/alphamed-federated:ro
       - code_data:/app/db
     environment:
       NVIDIA_DRIVER_CAPABILITIES: compute,utility
@@ -122,14 +110,14 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: /data/alphamed/alphamed-runtime
+      device: /data/alphamed/alphamed-runtime  
   code_data:
     driver: local
     driver_opts:
       o: bind
       type: none
       device: /data/alphamed/alphamed-code
-  databse_init:
+  database_init:
     driver: local
     driver_opts:
       o: bind
@@ -140,4 +128,4 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: /data/alphamed/alphamed-storage
+      device: /data/alphamed/alphamed-storage      

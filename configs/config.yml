@@ -8,12 +8,12 @@ backend:
   host: 127.0.0.1
 chain:
   chain_id: "alphamed_federated_network"
-  org_id: "alphamed-ssplabs"
-  org_name: "alphamedSSPLabs"
-  node_name: "ssplabsCVMBJ001"
-  node_id: "QmYX5KatFyFve3xVjadX2h7fEt1SzpdA8wnQsQ4v9muCyR"
-  user_name: "ssplabsAdmin01"
-  node_host: "172.16.0.2" # "127.0.0.1"
+  org_id: "nst-state-lab-bupt"
+  org_name: "nstStateLabBUPT"
+  node_name: "buptCVM001"
+  node_id: "QmfFQ1CDXU8kYGMSkqPGqMw7NfnjGsfr3jPU9GbSBY4P3J"
+  user_name: "buptAdmin01"
+  node_host: "172.27.0.5" # "127.0.0.1"
   node_rpc_port: 12301
   tls: true
   tls_host_name: "chainmaker.org"

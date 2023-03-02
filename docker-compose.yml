@@ -6,7 +6,7 @@ services:
     container_name: alphamed-federated-database
     volumes:
       - db_data:/var/lib/mysql
-      - databse_init:/docker-entrypoint-initdb.d
+      - database_init:/docker-entrypoint-initdb.d
     restart: always
     ports:
       - "9306:3306"
@@ -55,23 +55,9 @@ services:
       - "9070:9070"
     restart: always
 
-  playground-backend:
-    depends_on:
-      - federated_db
-      - chain-connector
-    container_name: alphamed-playground-backend
-    build:
-      context: git@github.com:ssplabs/playground-backend.git#master
-      dockerfile: Dockerfile
-      network: host
-    ports:
-      - "9060:9060"
-    restart: always
-
   federated-service:
     depends_on:
       - federated_db
-      - chain-connector
     container_name: alphamed-federated-service
     build:
       context: git@github.com:ssplabs/federated-service.git#master
@@ -88,7 +74,7 @@ services:
 
   playground-jupyter:
     depends_on:
-      - playground-backend
+      - federated-service
     container_name: alphamed-federated-playground-jupyter
 
     hostname: playground-jupyter
@@ -117,7 +103,7 @@ volumes:
       o: bind
       type: none
       device: /data/alphamed/alphamed-code
-  databse_init:
+  database_init:
     driver: local
     driver_opts:
       o: bind
