@@ -58,12 +58,12 @@ services:
   federated-service:
     depends_on:
       - federated_db
-    image: mirrors-sspedu.tencentcloudcr.com/alphamed-hub/federated-service:build-develop
+    # image: mirrors-sspedu.tencentcloudcr.com/alphamed-hub/federated-service:build-develop
     container_name: alphamed-federated-service
-    # build:
-    #   context: git@github.com:ssplabs/federated-service.git#develop
-    #   dockerfile: Dockerfile
-    #   network: host
+    build:
+      context: git@github.com:ssplabs/federated-service.git#develop
+      dockerfile: Dockerfile
+      network: host
     environment:
       FED_ENV: "${FED_ENV}"
     ports:
@@ -76,13 +76,13 @@ services:
   playground-jupyter:
     depends_on:
       - federated-service
-    image: mirrors-sspedu.tencentcloudcr.com/alphamed-hub/playground-jupyter:develop
+    # image: mirrors-sspedu.tencentcloudcr.com/alphamed-hub/playground-jupyter:develop
     container_name: alphamed-federated-playground-jupyter
     hostname: playground-jupyter
-    # build:
-    #   context: git@github.com:ssplabs/playground-jupyter.git#develop
-    #   dockerfile: Dockerfile
-    #   network: host
+    build:
+      context: git@github.com:ssplabs/playground-jupyter.git#develop
+      dockerfile: Dockerfile
+      network: host
     ports:
       - "9010:8000"
     restart: always
