@@ -76,7 +76,7 @@ services:
   playground-jupyter:
     depends_on:
       - federated-service
-    image: docker pull mirrors-sspedu.tencentcloudcr.com/alphamed-hub/playground-jupyter:develop
+    image: mirrors-sspedu.tencentcloudcr.com/alphamed-hub/playground-jupyter:develop
     container_name: alphamed-federated-playground-jupyter
     hostname: playground-jupyter
     # build:
