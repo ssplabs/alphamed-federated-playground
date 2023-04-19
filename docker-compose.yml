@@ -58,6 +58,7 @@ services:
   federated-service:
     depends_on:
       - federated_db
+    # image: mirrors-sspedu.tencentcloudcr.com/alphamed-hub/federated-service:build-develop
     container_name: alphamed-federated-service
     build:
       context: git@github.com:ssplabs/federated-service.git#release/v2.3
@@ -75,8 +76,8 @@ services:
   playground-jupyter:
     depends_on:
       - federated-service
+    # image: mirrors-sspedu.tencentcloudcr.com/alphamed-hub/playground-jupyter:develop
     container_name: alphamed-federated-playground-jupyter
-
     hostname: playground-jupyter
     build:
       context: git@github.com:ssplabs/playground-jupyter.git#release/v2.3

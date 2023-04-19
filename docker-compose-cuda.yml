@@ -58,7 +58,8 @@ services:
   federated-service:
     depends_on:
       - federated_db
-    container_name: alphamed-federated-service    
+    container_name: alphamed-federated-service
+    shm_size: 2gb    
     build:
       context: git@github.com:ssplabs/federated-service.git#release/v2.3_cuda11
       dockerfile: Dockerfile
@@ -82,7 +83,7 @@ services:
     depends_on:
       - federated-service
     container_name: alphamed-federated-playground-jupyter
-
+    shm_size: 24gb
     hostname: playground-jupyter
     build:
       context: git@github.com:ssplabs/playground-jupyter.git#release/v2.3_cuda11
