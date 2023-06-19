@@ -33,10 +33,7 @@ services:
 
   playground-dataset:
     container_name: playground-dataset
-    build:
-      context: git@github.com:ssplabs/nodejs-api-playground-node.git#release
-      dockerfile: Dockerfile
-      network: host
+    image: mirrors-sspedu.tencentcloudcr.com/alphamed-hub/playground-dataset:v2.3
     ports:
       - 9020:80
     environment:
@@ -46,11 +43,8 @@ services:
   chain-connector:
     depends_on:
       - federated_db
+    image: mirrors-sspedu.tencentcloudcr.com/alphamed-hub/chain-connector:v2.3
     container_name: alphamed-chain-connector
-    build:
-      context: git@github.com:ssplabs/ssplabs-chain-connector.git#master
-      dockerfile: Dockerfile
-      network: host
     ports:
       - "9070:9070"
     restart: always
@@ -60,10 +54,7 @@ services:
       - federated_db
     container_name: alphamed-federated-service
     shm_size: 2gb    
-    build:
-      context: git@github.com:ssplabs/federated-service.git#release/v2.3_cuda11
-      dockerfile: Dockerfile
-      network: host
+    image: mirrors-sspedu.tencentcloudcr.com/alphamed-hub/federated-service:v2.3_cuda11
     ports:
       - "9080:9080"
       - "21010-21020:21010-21020"
@@ -85,10 +76,7 @@ services:
     container_name: alphamed-federated-playground-jupyter
     shm_size: 24gb
     hostname: playground-jupyter
-    build:
-      context: git@github.com:ssplabs/playground-jupyter.git#release/v2.3_cuda11
-      dockerfile: Dockerfile
-      network: host
+    image: mirrors-sspedu.tencentcloudcr.com/alphamed-hub/playground-jupyter:v2.3_cuda11
     ports:
       - "9010:8000"
     restart: always
