@@ -130,7 +130,7 @@ class NodeInitRecord:
     __sa_dataclass_metadata_key__ = "sa"
     __tablename__ = 'node_init_record'
 
-    id: int = field(init=False, metadata={"sa": Column(sqltypes.BigInteger, primary_key=True, autoincrement=True)}, )
+    id: int = field(init=False, metadata={"sa": Column(sqltypes.Integer, primary_key=True, autoincrement=True)}, )
     create_at: Optional[datetime] = field(
         metadata={"sa": Column(sqltypes.DateTime(timezone=True), server_default=sqlalchemy.func.now())}, )
     update_at: Optional[datetime] = field(metadata={
@@ -140,7 +140,7 @@ class NodeInitRecord:
                                                        doc="初始化流程类型 chain_connector, playground")})
     init_result: bool = field(metadata={"sa": Column(sqltypes.BOOLEAN, nullable=False, index=True, doc="初始化结果")})
     init_content: str = field(metadata={"sa": Column(sqltypes.JSON, nullable=False, doc="各种杂乱的配置信息")})
-    message: str = field(metadata={"sa": Column(sqltypes.Text, nullable=False, doc="错误信息")})
+    message: Optional[str] = field(metadata={"sa": Column(sqltypes.Text, nullable=True, doc="错误信息")})
 
     def to_dict(self):
         return {c.name: getattr(self, c.name, None).value if isinstance(getattr(self, c.name, None), Enum) else getattr(

@@ -14,7 +14,7 @@ services:
       MYSQL_ROOT_PASSWORD: alpha&federated
       MYSQL_USER: federated
       MYSQL_PASSWORD: alpha&federated
-      # MYSQL_DATABASE: federated_db
+      MYSQL_DATABASE: federated_db
       TZ: Asia/Shanghai
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--max_allowed_packet=200M']
 

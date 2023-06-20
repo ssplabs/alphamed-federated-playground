@@ -44,7 +44,14 @@ class ChainInitialization(object):
             "Algorithm": 1
         }
         res_json = self.backend_client.import_org_cert(org_params)
-        assert res_json.get("Status") == "OK", "import_init_certs failed"
+        if res_json.get('Data'):
+            res_json = res_json["Data"]
+            assert res_json.get("Status") == "OK", "import_init_certs failed"
+        elif res_json.get("Error"):
+            error_dict = res_json["Error"]
+            assert str(error_dict.get("Code", "")) == "80005", "import_init_certs failed"
+        else:
+            raise AssertionError("import_init_certs failed")
         user_params = {
             "OrgId": chain_config.get("org_id"),
             "OrgName": chain_config.get("org_name"),
@@ -57,7 +64,14 @@ class ChainInitialization(object):
             "Algorithm": 1
         }
         res_json = self.backend_client.import_user_cert(user_params)
-        assert res_json.get("Status") == "OK", "import_init_certs failed"
+        if res_json.get('Data'):
+            res_json = res_json["Data"]
+            assert res_json.get("Status") == "OK", "import_user_cert failed"
+        elif res_json.get("Error"):
+            error_dict = res_json["Error"]
+            assert str(error_dict.get("Code", "")) == "80005", "import_user_cert failed"
+        else:
+            raise AssertionError("import_user_cert failed")
 
     def subscribe_chain(self):
         params = {
@@ -71,6 +85,12 @@ class ChainInitialization(object):
             "TLSHostName": self.chain_config.get('tls_host_name')
         }
         try:
+            check_res = self.backend_client.get_chain_sub_list({"ChainId": self.chain_config.get('chain_id'), "Algorithm": 0})
+            if check_res.get("Data"):
+                assert check_res["Data"].get("ChainId") == self.chain_config.get('chain_id')
+                print("ChainId {} is already subscribed".format(self.chain_config.get('chain_id')))
+                return True
+            
             res = self.backend_client.subscribe_chain(params)
             assert res.get('Status') == "OK", f"subscribe_chain params={params} failed res={res}"
             print("successfully subscribe chain ")
@@ -86,12 +106,12 @@ class ChainInitialization(object):
 
     def init_cert(self):
         try:
-            check_step = db_initalization.check_init_step()
+            check_step = db_initalization.check_init_step(self.node_id)
             if not check_step.init_result:
                 self.upload_file()
                 self.import_init_certs()
                 db_initalization.update_step(self.node_id, "chain_connector_init_cert", True, "")
-                return True
+            return True
         except Exception as e:
             print(str(e))
             db_initalization.update_step(self.node_id, "chain_connector_init_cert", False, e.__repr__())
@@ -120,7 +140,10 @@ class ChainInitialization(object):
         self.node_id = hashlib.md5(res[0].strip().encode()).hexdigest().upper()
         init_cert_ret = self.init_cert()
         assert init_cert_ret, "init cert failed"
+        print("init cert success!")
         subscribe_chain_ret = self.subscribe_chain()
         assert subscribe_chain_ret, "subscribe chain failed"
+        print("subscribe chain success!")
         chain_contract_ret = self.subscribe_chain_contract()
         assert chain_contract_ret, "subscribe chain contract failed"
+        print("subscribe chain contract success!")

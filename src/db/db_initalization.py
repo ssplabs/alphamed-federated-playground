@@ -25,8 +25,9 @@ def create_init_step(node_id, init_type="chain_connector"):
             "update_at": datetime.datetime.now(),
             "node_id": node_id,
             "node_init_type": init_type,
-            "init_result": True,
+            "init_result": False,
             "init_content": {},
+            "message":""
         }
         ret = NodeInitRecord(**value_dict)
         db_session.add(ret)

@@ -87,9 +87,8 @@ class ChainConnectorClient(object):
             resp_json, error = self.send_request(url, params)
             print(resp_json)
             _Response: dict = resp_json.get('Response')
-            _Data: dict = _Response.get('Data')
-            assert _Data, f'get_cert host={host} params={params} 返回 Data 错误: {_Data}'
-            return _Data
+            assert _Response, f'get_cert host={host} params={params} 返回 Data 错误: {_Response}'
+            return _Response
         except AssertionError as e:
             _logger.exception(e)
             return {}
@@ -119,9 +118,8 @@ class ChainConnectorClient(object):
             resp_json, error = self.send_request(url, params)
             print(resp_json)
             _Response: dict = resp_json.get('Response')
-            _Data: dict = _Response.get('Data')
-            assert _Data, f'get_cert host={host} params={params} 返回 Data 错误: {_Data}'
-            return _Data
+            assert _Response, f'get_cert host={host} params={params} 返回 Data 错误: {_Response}'
+            return _Response
         except AssertionError as e:
             _logger.exception(e)
             return {}
@@ -282,6 +280,31 @@ class ChainConnectorClient(object):
         except AssertionError as e:
             _logger.exception(e)
             return {}
+
+    def get_chain_sub_list(self, params, host=None):
+        """
+        params:
+            {
+                ChainId  string
+            }
+        """
+
+        if not host:
+            host = self.bass_host
+            self.login()
+        else:
+            self.login(host=host)
+
+        try:
+            url = f"http://{host}:{self.bass_port}{self.base_path}GetSubscribeConfig"
+            resp_json, error = self.send_request(url, params)
+            
+            _Response: dict = resp_json.get('Response')
+            assert _Response, "GetSubscribeConfig response fialed"
+            return _Response
+        except AssertionError as e:
+            _logger.exception(e)
+            return {}        
 
     def get_cert(self, params, host=None):
         """

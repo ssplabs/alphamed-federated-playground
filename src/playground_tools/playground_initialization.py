@@ -41,7 +41,8 @@ class PlaygroundInitialization(object):
                 "node_id": "QmYX5KatFyFve3xVjadX2h7fEt1SzpdA8wnQsQ4v9muCyR",
                 "node_ip": "172.16.0.2",
                 "org_name": "alphamedSSPLabs",
-                "org_id": "alphamed-ssplabs"
+                "org_id": "alphamed-ssplabs",
+                "user_name": "alphamed-ssplabs"
             }
         """
         ret = self.fed_client.node_init(params)
@@ -76,7 +77,8 @@ class PlaygroundInitialization(object):
                 "node_name": self.config.get("fed_node").get("node_name"),
                 "node_ip": self.config.get("fed_node").get("node_host"),
                 "org_name": self.config.get("fed_node").get("org_name"),
-                "org_id": self.config.get("fed_node").get("org_id")
+                "org_id": self.config.get("fed_node").get("org_id"),
+                "user_name": self.config.get("fed_node").get("user_name"),
             })
         self.license_code = sha256(self.machine_code.encode()).hexdigest().upper()
         print("生成机器码。。。")
